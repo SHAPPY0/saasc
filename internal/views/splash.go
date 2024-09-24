@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"github.com/rivo/tview"
+	"github.com/shappy0/saasc/internal/config"
 )
 
 var TitleSplash = "splash"
@@ -21,11 +22,11 @@ var Logo = []string{
 	`(___(__)(__|__)(__|___/\___)`,
 }
 
-func NewSplash(version string) *Splash {
-	s := &Splash{
-		Flex:	tview.NewFlex(),
-		Title:	TitleSplash,
-		Version:	version,
+func NewSplash(config *config.Conf) *Splash {
+	s := Splash{
+		Flex:		tview.NewFlex(),
+		Title:		TitleSplash,
+		Version:	config.Version,
 	}
 	s.SetDirection(tview.FlexRow)
 	LogoV := tview.NewTextView()
@@ -41,7 +42,7 @@ func NewSplash(version string) *Splash {
 
 	s.AddItem(LogoV, 10, 1, false)
 	s.AddItem(Version, 1, 1, false)
-	return s
+	return &s
 }
 
 func (s *Splash) GetTitle() string {

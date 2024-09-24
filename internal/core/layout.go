@@ -2,9 +2,10 @@ package core
 
 import (
 	"time"
-	// "github.com/rivo/tview"
+	"github.com/rivo/tview"
 	"github.com/shappy0/saasc/internal/views"
 	"github.com/shappy0/saasc/internal/widgets"
+	"github.com/shappy0/saasc/internal/config"
 )
 
 type Layout struct {
@@ -13,18 +14,23 @@ type Layout struct {
 	Main		*widgets.Flex
 	Header 		*views.Header
 	// Footer		*views.Footer
+	Body		*widgets.Pages
 }
 
-func NewLayout(version string) *Layout {
+func NewLayout(config *config.Conf) *Layout {
 	l := Layout{
 		App:	views.NewApp(),
-		Splash:	views.NewSplash(version),
+		Splash:	views.NewSplash(config),
 		Main:	widgets.NewFlex(),
 		Header:	views.NewHeader(),
 		// Footer: views.NewFooter(),
+		Body:	widgets.NewPages(),
 	}
-	l.Main.AddItem(l.Header, 5, 1, false)
-			// AddItem(l.Body, 0, 1, true).
+	l.Main.Border(false)
+	l.Header.Render(config)
+	l.Main.FlexRow().
+			AddItem(l.Header, 5, 1, false).
+			AddItem(l.Body, 0, 1, true)
 			// AddItem(l.Footer, 1, 1, false)
 
 	l.SetRoot(l.Splash, true)
@@ -43,11 +49,28 @@ func (l *Layout) Run(app *App) error {
 			// } else {
 			// 	l.OpenPage("main", true)
 			// }
-			l.OpenPage("main", true)
+			l.OpenPage("plans", true)
 		})
 	}()
 	if err := l.SetFocus(l.Splash).Run(); err != nil {
 		return err
 	}
 	return nil
+}
+
+func (l *Layout) ChangeFocusX(p tview.Primitive) {
+	l.SetFocus(p)
+}
+
+func (l *Layout) OpenPage(name string, addHistory bool) {
+	l.Body.OpenPageX(name, addHistory)
+}
+
+
+func (l *Layout) GetActivePage() string {
+	return l.Body.GetActivePage()
+}
+
+func (l *Layout) GoBack() {
+	l.Body.GoBack()
 }

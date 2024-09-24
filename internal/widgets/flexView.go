@@ -22,6 +22,15 @@ func (f *Flex) AddItemX(primitive tview.Primitive, fixedSize, proportion int, fo
 	f.AddItem(primitive, fixedSize, proportion, focus)
 }
 
+func (f *Flex) FlexRow() *Flex {
+	f.SetDirection(tview.FlexRow)
+	return f
+}
+
+func (f *Flex) Border(b bool) {
+	f.SetBorder(b)
+}
+
 func (f *Flex) FullScreen(on bool) {
 	f.SetFullScreen(on)
 }
