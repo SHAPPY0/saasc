@@ -62,27 +62,6 @@ Default config file looks like below -
 
   #Set Azure Tenant Id, which has your subscription
   #Azure_Tenant_Id = ""
-
-  #Set Default Nomad Region's Namespace
-  Nomad_Namespace = ""
-
-  #Set Nomad CA certificate
-  #Nomad_Cacert = ""
-
-  #Set Nomad CA path
-  #Nomad_Capath = ""
-
-  #Set Nomad Client Certificate
-  #Nomad_Client_Cert = ""
-
-  #Set Nomad Client Certificate Key
-  #Nomad_Client_Key = ""
-
-  #Set Nomad TLS server
-  #Nomad_Tls_Server = ""
-
-  #Set If skip certificate verify
-  #Nomad_Skip_Verify = false
 ```
 
 ### Commands:

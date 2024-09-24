@@ -19,18 +19,18 @@ func NewFlex() *Flex {
 }
 
 func (f *Flex) AddItemX(primitive tview.Primitive, fixedSize, proportion int, focus bool) {
-	f.AddItemc(primitive, fixedSize, proportion, focus)
+	f.AddItem(primitive, fixedSize, proportion, focus)
 }
 
 func (f *Flex) FullScreen(on bool) {
 	f.SetFullScreen(on)
 }
 
-func (f *Flex) SetTitle(title, a string) {
+func (f *Flex) SetTitleX(title, a string) {
 	if a != "" {
-		f.SetTitle(fmt.Sprintf(" [::b][%s]%s(%s) ", utils.ColorT7, strings.ToUpper(title), a))
+		f.SetTitle(fmt.Sprintf(" [::b][%s]%s(%s) ", "#cccccc", strings.ToUpper(title), a))
 	} else {
-		f.SetTitle(fmt.Sprintf(" [::b][%s]%s ", utils.ColorT7, strings.ToUpper(title)))
+		f.SetTitle(fmt.Sprintf(" [::b][%s]%s ", "#cccccc", strings.ToUpper(title)))
 	}
 }
 
