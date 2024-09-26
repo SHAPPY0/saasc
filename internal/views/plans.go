@@ -11,7 +11,7 @@ type Plans struct {
 	*widgets.Table
 	Title		string
 	Headers		[]string
-	Data		[]models.Plans
+	Data		[]models.Plan
 }
 
 func NewPlans() *Plans {

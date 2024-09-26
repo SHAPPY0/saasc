@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"github.com/shappy0/saasc/internal/config"
 	"github.com/shappy0/saasc/internal/azure"
 )
@@ -10,7 +11,7 @@ type App struct {
 	Version		string
 	Layout		*Layout
 	Primitives 	PrimitivesX
-	AzureClient	*azure.AzureClient
+	Azure		*azure.Client
 }
 
 type PrimitivesX struct {
@@ -22,8 +23,12 @@ func NewApp(c *config.Conf) (*App, error) {
 		Config: 		c,
 		Version: 		c.Version,
 		Layout: 		NewLayout(c),
-		AzureClient:	azure.NewAzureClient(),
 	}
+	azClient, err := azure.NewClient(c)
+	if err != nil {
+		fmt.Println(err)
+	}
+	a.Azure = azClient
 	return &a, nil
 }
 

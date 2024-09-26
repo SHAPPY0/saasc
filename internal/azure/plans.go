@@ -2,7 +2,8 @@ package azure
 
 import (
 	"fmt"
-	"github.com/shappy0/saasc/internal/config"
+	// "github.com/shappy0/saasc/internal/config"
+	// "github.com/shappy0/saasc/internal/models"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice/v2"
 )
 
@@ -10,21 +11,30 @@ import (
 // 	List() ([]string, error)
 // }
 
-type PlansClient struct {
-	AsClientFactory		*armappservice.ClientFactory
+type Plans struct {
+	Azure 			*Client
+	Client			*armappservice.PlansClient
+	ClientFactory	*armappservice.ClientFactory
 }
 
-func NewPlansClient(config *config.Conf) *PlansClient {
-	pc := PlansClient{}
-	pc.AsClientFactory = pc.CreateClientFactory(config)
-	return &pc
+type PlansClient interface {
+	List()	([]string, error)
 }
 
-func (pc *PlansClient) CreateClientFactory(config *config.Conf) *armappservice.ClientFactory {
-	asClientFactory, err := armappservice.NewClientFactory(config.AzureSubscriptionId, nil, nil)
+func (c *Client) NewPlans() *Plans {
+	cf, err := armappservice.NewClientFactory(c.SubscriptionId, c.Credential, nil)
 	if err != nil {
 		fmt.Println(err)
-		panic(err)
 	}
-	return asClientFactory
+	p := Plans{
+		Azure:			c,
+		ClientFactory:	cf,
+		Client:			cf.NewPlansClient(),
+	}
+
+	return &p
+}
+
+func (p *Plans) List() ([]string, error) {
+	return make([]string, 3), nil
 }

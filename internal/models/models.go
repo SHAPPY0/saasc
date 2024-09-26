@@ -6,4 +6,11 @@ type Metadata struct {
 	AzureTenantId			string
 }
 
-type Plans struct {}
+type Plan struct {
+	Location 	string
+	Kind		string
+	Tags		map[string]*string
+	ID			string
+	Name		string
+	Type		string
+}

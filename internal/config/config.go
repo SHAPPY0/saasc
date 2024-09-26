@@ -35,6 +35,7 @@ type Conf struct {
 	ConfigPath			string		
 	RefreshRate 		int			`toml:"Refresh_Rate"`
 	AzureSubscriptionId	string		`toml:"Azure_Subscription_Id"`
+	AzureResourceGroup	string		`toml:"Azure_Resource_Group"`
 	AzureClientId		string		`toml:"Azure_Client_Id"`
 	AzureClientSecret	string		`toml:"Azure_Client_Secret"`
 	AzureTenantId		string		`toml:"Azure_Tenant_Id"`
@@ -104,6 +105,9 @@ func (c *Conf) SetConfig(conf *Conf) {
 	}
 	if (conf.AzureTenantId == "") {
 		conf.AzureTenantId = c.AzureTenantId
+	}
+	if (conf.AzureResourceGroup == "") {
+		conf.AzureResourceGroup = c.AzureResourceGroup
 	}
 	conf.LogDirPath = filepath.Join(conf.HomeDir, conf.AppDir, conf.LogDir, conf.LogFilePath)
 }
