@@ -7,10 +7,11 @@ import (
 )
 
 type Client struct {
-	SubscriptionId	string
-	ResourceGroup	string
-	Credential		*azidentity.DefaultAzureCredential
-	PlansClient		PlansClient
+	SubscriptionId			string
+	ResourceGroup			string
+	Credential				*azidentity.DefaultAzureCredential
+	ResourceGroupsClient 	ResourceGroupsClient
+	PlansClient				PlansClient
 }
 
 func NewClient(config *config.Conf) (*Client, error) {
@@ -23,6 +24,7 @@ func NewClient(config *config.Conf) (*Client, error) {
 		return nil, err
 	}
 	c.Credential = cred
+	c.ResourceGroupsClient = c.NewResourceGroups()
 	c.PlansClient = c.NewPlans()
 	return &c, nil
 }

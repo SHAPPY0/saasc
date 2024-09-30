@@ -1,10 +1,11 @@
 package cmd
 
 import (
-	// "fmt"
+	"os"
 	"github.com/spf13/cobra"
 	"github.com/shappy0/saasc/internal/config"
 	"github.com/shappy0/saasc/internal/core"
+	"github.com/shappy0/saasc/internal/utils"
 )
 
 var (
@@ -30,12 +31,21 @@ func Init(cmd *cobra.Command, args []string) error {
 	}
 	conf.Version = Version
 	conf.Commit = Commit
-	app, err := core.NewApp(conf)
+	logFile, err := os.OpenFile(conf.LogDirPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, utils.DefaultFileMod)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		if logFile != nil {
+			_ = logFile.Close()
+		}
+	}()
+	var logger = utils.NewLogger(conf.LogLevel, logFile)
+	app, err := core.NewApp(conf, logger)
 	if err != nil {
 		return err
 	}
 	if err := app.Init(); err != nil {
-		// logger.Error(err.Error())
 		return err
 	}
 	app.RunX()

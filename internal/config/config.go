@@ -9,19 +9,6 @@ import (
 	// "github.com/shappy0/saasc/internal/utils"
 )
 
-var (
-	AppName = "saasc"
-	ShortDesc = "Azure App Service CLI Tool"
-	LongDesc = "An Azure App Service CLI Tool to view and manage Azure App Services"
-	DefaultAppDir = "." + AppName
-	DefaultConfigFile = "config.toml"
-	DefaultLogDir = "logs"
-	DefaultFilePath = "/saasc.log"
-	Info = "info"
-	Debug = "debug"
-	Error = "error"
-)
-
 type Conf struct {
 	AppName				string		`toml:"AppName"`
 	Version				string		`toml:"Version"`

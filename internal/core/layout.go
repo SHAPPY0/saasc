@@ -13,7 +13,7 @@ type Layout struct {
 	Splash		*views.Splash
 	Main		*widgets.Flex
 	Header 		*views.Header
-	// Footer		*views.Footer
+	Footer		*views.Footer
 	Body		*widgets.Pages
 }
 
@@ -23,15 +23,15 @@ func NewLayout(config *config.Conf) *Layout {
 		Splash:	views.NewSplash(config),
 		Main:	widgets.NewFlex(),
 		Header:	views.NewHeader(),
-		// Footer: views.NewFooter(),
+		Footer: views.NewFooter(),
 		Body:	widgets.NewPages(),
 	}
 	l.Main.Border(false)
 	l.Header.Render(config)
 	l.Main.FlexRow().
 			AddItem(l.Header, 5, 1, false).
-			AddItem(l.Body, 0, 1, true)
-			// AddItem(l.Footer, 1, 1, false)
+			AddItem(l.Body, 0, 1, true).
+			AddItem(l.Footer, 1, 1, false)
 
 	l.SetRoot(l.Splash, true)
 	return &l
@@ -49,7 +49,7 @@ func (l *Layout) Run(app *App) error {
 			// } else {
 			// 	l.OpenPage("main", true)
 			// }
-			l.OpenPage("plans", true)
+			l.OpenPage(app.Primitives.ResourceGroups.GetTitle(), true)
 		})
 	}()
 	if err := l.SetFocus(l.Splash).Run(); err != nil {
