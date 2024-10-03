@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/gdamore/tcell/v2"
 	"github.com/shappy0/saasc/internal/config"
 	"github.com/shappy0/saasc/internal/utils"
 	"github.com/shappy0/saasc/internal/azure"
@@ -19,6 +20,7 @@ type App struct {
 type PrimitivesX struct {
 	ResourceGroups	*ResourceGroups
 	Plans			*Plans
+	WebApps			*WebApps
 }
 
 func NewApp(c *config.Conf, logger *utils.Logger) (*App, error) {
@@ -29,7 +31,7 @@ func NewApp(c *config.Conf, logger *utils.Logger) (*App, error) {
 		Alert:			utils.NewAlert(),
 		Logger:			logger,
 	}
-	azClient, err := azure.NewClient(c)
+	azClient, err := azure.NewClient(c, logger)
 	if err != nil {
 		a.Logger.Error(err.Error())
 		return nil, err
@@ -42,10 +44,27 @@ func (a *App) Init() error {
 	a.Primitives = PrimitivesX{
 		ResourceGroups:	NewResourceGroups(a),
 		Plans:			NewPlans(a),
+		WebApps:		NewWebApps(a),
 	}
+	a.BindAppKeys()
 	alert := NewAlert(a)
 	go alert.Listen()
 	return nil
+}
+
+func (a *App) BindAppKeys() {
+	a.Layout.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Key() {
+		case utils.ExistKey.Key:
+			a.Logger.Info("Stopping saasc by user ...")
+			a.StopX()
+			break
+		case utils.EscKey.Key:
+			a.Layout.GoBack()
+			break
+		}
+		return event
+	})
 }
 
 func (a *App) RunX() error {

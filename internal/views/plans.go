@@ -20,7 +20,7 @@ func NewPlans() *Plans {
 	p := Plans{
 		Title:		TitlePlans,
 		Table:		widgets.NewTable(TitlePlans),
-		Headers:	[]string{"", "name", "kind", "location", "resourceId"},
+		Headers:	[]string{"", "name", "os", "status", "apps", "location", "tier"},
 	}
 	p.Table.Headers = p.Headers
 	p.Table.DrawHeader()
@@ -38,8 +38,10 @@ func (p *Plans) UpdateData(rg string, data []models.Plan) {
 		p.Table.DrawCell(i + 1, 0, utils.IntToStr(i + 1) + ".", tcell.ColorWhite)
 		p.Table.DrawCell(i + 1, 1, p.Data[i].Name, tcell.ColorWhite)
 		p.Table.DrawCell(i + 1, 2, p.Data[i].Kind, tcell.ColorWhite)
-		p.Table.DrawCell(i + 1, 3, p.Data[i].Location, tcell.ColorWhite)
-		p.Table.DrawCell(i + 1, 4, p.Data[i].Id, tcell.ColorWhite)
+		p.Table.DrawCell(i + 1, 3, p.Data[i].Properties.Status, tcell.ColorWhite)
+		p.Table.DrawCell(i + 1, 4, utils.IntToStr(int(*p.Data[i].Properties.NumberOfSites)) , tcell.ColorWhite)
+		p.Table.DrawCell(i + 1, 5, p.Data[i].Location, tcell.ColorWhite)
+		p.Table.DrawCell(i + 1, 6, p.Data[i].SKU.Tier, tcell.ColorWhite)
 
 	}
 }

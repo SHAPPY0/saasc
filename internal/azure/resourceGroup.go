@@ -1,8 +1,8 @@
 package azure
 
 import (
-	"fmt"
-	"log"
+	// "fmt"
+	// "log"
 	"sort"
 	"context"
 	"github.com/shappy0/saasc/internal/models"
@@ -19,17 +19,18 @@ type ResourceGroupsClient interface {
 	List()	([]models.ResourceGroup, error)
 }
 
-func (c *Client) NewResourceGroups() *ResourceGroups {
+func (c *Client) NewResourceGroups() (*ResourceGroups, error) {
 	cf, err := armresources.NewClientFactory(c.SubscriptionId, c.Credential, nil)
 	if err != nil {
-		fmt.Println(err)
+		c.Logger.Error("[NewResourceGroups] " + err.Error())
+		return nil, err
 	}
 	rg := ResourceGroups{
 		Azure:			c,
 		ClientFactory:	cf,
 		Client:			cf.NewResourceGroupsClient(),
 	}
-	return &rg
+	return &rg, nil
 }
 
 func (rg *ResourceGroups) List() ([]models.ResourceGroup, error) {
@@ -39,7 +40,8 @@ func (rg *ResourceGroups) List() ([]models.ResourceGroup, error) {
 	for pager.More() {
 		page, err := pager.NextPage(ctx)
 		if err != nil {
-			log.Fatalf("Failed %v", err)
+			rg.Azure.Logger.Error("[ResouorceGroups->List] " + err.Error())
+			return nil, err
 		}
 		for _, v := range page.Value {
 			rg := models.ResourceGroup{

@@ -9,7 +9,7 @@ type Plans struct {
 	*views.Plans
 	App				*App
 	ResourceGroup	string
-	SelectedValue	map[string]string
+	SelectedRow		map[string]string
 }
 
 func NewPlans(app *App) *Plans {
@@ -18,7 +18,18 @@ func NewPlans(app *App) *Plans {
 		App:	app,
 	}
 	p.App.Layout.Body.AddPageX(p.GetTitle(), p, true, false)
+	p.SetOnSelectFn(p.OnRowSelect)
 	return p
+}
+
+func (p *Plans) OnRowSelect(row, col int) {
+	p.SelectedRow = p.GetSelectedItem()
+	go func() {
+		p.App.Layout.QueueUpdateDraw(func() {
+			p.App.Primitives.WebApps.RenderView(p.ResourceGroup)
+			p.App.Layout.OpenPage(p.App.Primitives.WebApps.GetTitle(), true)
+		})
+	}()
 }
 
 func (p *Plans) RenderView(rg string) {

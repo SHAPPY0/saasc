@@ -17,12 +17,3 @@ type ResourceGroup struct {
 	Name		string
 	Location	string
 }
-
-type Plan struct {
-	Location 	string
-	Kind		string
-	Tags		map[string]*string
-	Id			string
-	Name		string
-	Type		string
-}

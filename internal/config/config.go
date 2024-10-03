@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"errors"
+	"reflect"
 	"path/filepath"
 	"github.com/BurntSushi/toml"
 	// "github.com/shappy0/saasc/internal/utils"
@@ -26,6 +27,13 @@ type Conf struct {
 	AzureClientId		string		`toml:"Azure_Client_Id"`
 	AzureClientSecret	string		`toml:"Azure_Client_Secret"`
 	AzureTenantId		string		`toml:"Azure_Tenant_Id"`
+}
+
+var envVars = map[string]string {
+	"AZURE_SUBSCRIPTION_ID":	"AzureSubscriptionId",
+	"AZURE_CLIENT_ID":			"AzureClientId",
+	"AZURE_CLIENT_SECRET":		"AzureClientSecret",
+	"AZURE_TENANT_ID":			"AzureTenantId",	
 }
 
 func NewConfig() *Conf {
@@ -59,6 +67,7 @@ func (c *Conf) Load() (*Conf, error) {
 		return nil, err
 	}
 	c.SetConfig(_conf)
+	setEnvVariabled(_conf)
 	return _conf, nil
 }
 
@@ -97,4 +106,16 @@ func (c *Conf) SetConfig(conf *Conf) {
 		conf.AzureResourceGroup = c.AzureResourceGroup
 	}
 	conf.LogDirPath = filepath.Join(conf.HomeDir, conf.AppDir, conf.LogDir, conf.LogFilePath)
+}
+
+func getValues(config *Conf, key string) string {
+	r := reflect.ValueOf(config)
+	f := reflect.Indirect(r).FieldByName(key)
+	return string(f.String())
+}
+
+func setEnvVariabled(config *Conf) {
+	for key, value := range envVars {
+		os.Setenv(key, getValues(config, value))
+	}
 }
