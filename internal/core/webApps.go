@@ -6,7 +6,7 @@ import (
 
 type WebApps struct {
 	*views.WebApps
-	App			*App
+	App				*App
 	ResourceGroup	string
 	SelectedRow		map[string]string
 }
@@ -17,7 +17,18 @@ func NewWebApps(app *App) *WebApps {
 		App:			app,
 	}
 	wa.App.Layout.Body.AddPageX(wa.GetTitle(), wa, true, false)
+	wa.SetOnSelectFn(wa.OnRowSelect)
 	return &wa
+}
+
+func (wa *WebApps) OnRowSelect(row, col int) {
+	wa.SelectedRow = wa.GetSelectedItem()
+	go func() {
+		wa.App.Layout.QueueUpdateDraw(func() {
+			wa.App.Primitives.WebAppDetail.RenderView(wa.SelectedRow)
+			wa.App.Layout.OpenPage(wa.App.Primitives.WebAppDetail.GetTitle(), true)
+		})
+	}()
 }
 
 func (wa *WebApps) RenderView(rg string) {

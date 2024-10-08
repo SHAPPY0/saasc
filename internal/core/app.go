@@ -21,6 +21,7 @@ type PrimitivesX struct {
 	ResourceGroups	*ResourceGroups
 	Plans			*Plans
 	WebApps			*WebApps
+	WebAppDetail	*WebAppDetail
 }
 
 func NewApp(c *config.Conf, logger *utils.Logger) (*App, error) {
@@ -45,6 +46,7 @@ func (a *App) Init() error {
 		ResourceGroups:	NewResourceGroups(a),
 		Plans:			NewPlans(a),
 		WebApps:		NewWebApps(a),
+		WebAppDetail:	NewWebAppDetail(a),
 	}
 	a.BindAppKeys()
 	alert := NewAlert(a)
@@ -61,6 +63,13 @@ func (a *App) BindAppKeys() {
 			break
 		case utils.EscKey.Key:
 			a.Layout.GoBack()
+			break
+		case utils.RuneKey.Key:
+			switch event.Rune() {
+			case '1':
+				a.Layout.OpenPage(a.Primitives.Plans.GetTitle(), true)
+				break
+			}
 			break
 		}
 		return event

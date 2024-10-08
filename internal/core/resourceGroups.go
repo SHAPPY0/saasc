@@ -38,13 +38,15 @@ func (rg *ResourceGroups) RenderView() {
 
 func (rg *ResourceGroups) OnRowSelect(row, col int) {
 	rg.SelectedRow = rg.GetSelectedItem()
-	go rg.GoTo(rg.App.Primitives.Plans.GetTitle())
+	go rg.GoTo(rg.App.Primitives.WebApps.GetTitle())
 }
 
 func (rg *ResourceGroups) GoTo(page string) {
 	rg.App.Layout.QueueUpdateDraw(func() {
 		resourceGroup := rg.SelectedRow["name"]
-		rg.App.Primitives.Plans.RenderView(resourceGroup)
+		rg.App.Layout.Header.UpdateMetadata("ResourceGroup", resourceGroup, true)
+		rg.App.Config.SetResourceGroup(resourceGroup)
+		rg.App.Primitives.WebApps.RenderView(resourceGroup)
 		rg.App.Layout.OpenPage(page,  true)
 	})
 }

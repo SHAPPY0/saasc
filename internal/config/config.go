@@ -108,6 +108,14 @@ func (c *Conf) SetConfig(conf *Conf) {
 	conf.LogDirPath = filepath.Join(conf.HomeDir, conf.AppDir, conf.LogDir, conf.LogFilePath)
 }
 
+func (c *Conf) SetResourceGroup(rg string) {
+	c.AzureResourceGroup = rg
+}
+
+func (c *Conf) GetResourceGroup() string {
+	return c.AzureResourceGroup
+}
+
 func getValues(config *Conf, key string) string {
 	r := reflect.ValueOf(config)
 	f := reflect.Indirect(r).FieldByName(key)

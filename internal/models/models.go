@@ -8,6 +8,7 @@ type Alert struct {
 type AlertChan chan Alert
 
 type Metadata struct {
+	ResourceGroup			string
 	AzureSubscriptionId		string
 	AzureClientId			string
 	AzureTenantId			string

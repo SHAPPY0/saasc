@@ -4,6 +4,7 @@ import (
 	"github.com/gdamore/tcell/v2"
 	"github.com/shappy0/saasc/internal/widgets"
 	"github.com/shappy0/saasc/internal/models"
+	"github.com/shappy0/saasc/internal/utils"
 )
 
 var TitleWebApp = "web app"
@@ -19,7 +20,7 @@ func NewWebApps() *WebApps {
 	wa := WebApps{
 		Title:		TitleWebApp,
 		Table:		widgets.NewTable(TitleWebApp),
-		Headers:	[]string{"name", "status", "kind", "usage state", "host", "public", "location"},
+		Headers:	[]string{"name", "status", "kind", "usage state", "plan", "host", "public", "location"},
 	}
 	wa.Table.Headers = wa.Headers
 	wa.Table.DrawHeader()
@@ -38,9 +39,10 @@ func (wa *WebApps) UpdateData(rg string, data []models.WebApp) {
 		wa.Table.DrawCell(i + 1, 1, wa.Data[i].State, tcell.ColorWhite)
 		wa.Table.DrawCell(i + 1, 2, wa.Data[i].Kind, tcell.ColorWhite)
 		wa.Table.DrawCell(i + 1, 3, wa.Data[i].UsageState, tcell.ColorWhite)
-		wa.Table.DrawCell(i + 1, 4, wa.Data[i].DefaultHostName, tcell.ColorWhite)
-		wa.Table.DrawCell(i + 1, 5, wa.Data[i].PublicNetworkAccess, tcell.ColorWhite)
-		wa.Table.DrawCell(i + 1, 6, wa.Data[i].Location, tcell.ColorWhite)
+		wa.Table.DrawCell(i + 1, 4, utils.ParseResourceId(wa.Data[i].ServerFarmID, "serverfarms"), tcell.ColorWhite)
+		wa.Table.DrawCell(i + 1, 5, wa.Data[i].DefaultHostName, tcell.ColorWhite)
+		wa.Table.DrawCell(i + 1, 6, wa.Data[i].PublicNetworkAccess, tcell.ColorWhite)
+		wa.Table.DrawCell(i + 1, 7, wa.Data[i].Location, tcell.ColorWhite)
 
 	}
 }

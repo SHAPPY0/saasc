@@ -12,16 +12,10 @@ type Header struct {
 	*widgets.Flex
 	Logo			*tview.TextView
 	Metadata 		*widgets.MapView
+	MetadataContent	models.Metadata
 	Menu 			*widgets.Menu
 	
 }
-
-// var Logo = []string{
-// 	` _  _  ____  __  __  ____`,
-// 	`( \( )(_  _)(  )(  )(_  _)`,
-// 	` )  (   )(   )(__)(  _)(_`,
-// 	`(_)\_) (__) (______)(____)`,
-// }
 
 func NewHeader() *Header {
 	h := &Header{
@@ -44,12 +38,13 @@ func (h *Header) Render(config *config.Conf) {
 	//Logo
 	h.RenderLogo()
 	//Metadata
-	metadata := models.Metadata{
+	h.MetadataContent = models.Metadata{
+		ResourceGroup:			"-",
 		AzureSubscriptionId:	config.AzureSubscriptionId,
 		AzureClientId:			config.AzureClientId,
 		AzureTenantId:			config.AzureTenantId,
 	}
-	h.SetMetadata(metadata)
+	h.RenderMetadata()
 	//menu
 	h.RenderMenu(make([]widgets.Item, 0))
 }
@@ -71,8 +66,16 @@ func (h *Header) RenderMenu(menus []widgets.Item) error {
 	return nil
 }
 
-func (h *Header) SetMetadata(metadata models.Metadata) {
+func (h *Header) RenderMetadata() {
 	h.Metadata.Clear()
+	metadata := h.MetadataContent
+	rgKey := fmt.Sprintf("[%s]%s:", "cadetblue", "ResourceGroup")
+	rgValue := fmt.Sprintf("[%s]%s\n", "DimGray", "-")	
+	if metadata.ResourceGroup != "" {
+		rgValue = fmt.Sprintf("[%s]%s\n", "DimGray", metadata.ResourceGroup)
+	}
+	h.Metadata.SetMapKeyValue(rgKey, rgValue)
+
 	subsKey := fmt.Sprintf("[%s]%s:", "cadetblue", "SubscriptionId")
 	subsValue := fmt.Sprintf("[%s]%s\n", "DimGray", "-")	
 	if metadata.AzureSubscriptionId != "" {
@@ -87,12 +90,14 @@ func (h *Header) SetMetadata(metadata models.Metadata) {
 	}
 	h.Metadata.SetMapKeyValue(clientIdKey, clientIdValue)
 
-	tenantIdKey := fmt.Sprintf("[%s]%s:", "cadetblue", "TenantId")
-	tenantIdValue := fmt.Sprintf("[%s]%s\n", "DimGray", "-")	
-	if metadata.AzureTenantId != "" {
-		tenantIdValue = fmt.Sprintf("[%s]%s\n", "DimGray", metadata.AzureTenantId)
-	}
-	h.Metadata.SetMapKeyValue(tenantIdKey, tenantIdValue)
-
 	h.Metadata.DrawMapView()
+}
+
+func (h *Header) UpdateMetadata(key, value string, rerender bool) {
+	if key == "ResourceGroup" {
+		h.MetadataContent.ResourceGroup = value
+	}
+	if rerender {
+		h.RenderMetadata()
+	}
 }

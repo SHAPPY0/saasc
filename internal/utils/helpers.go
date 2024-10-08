@@ -47,6 +47,19 @@ func Stringify(st interface{}) string {
 	return string(str)
 }
 
+func ToJson(obj interface{}) (map[string]interface{}, error) {
+	var output map[string]interface{}
+	data, err := json.Marshal(obj)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(data, &output)
+	if err != nil {
+		return nil, err
+	}
+	return output, nil
+}
+
 func GetID(id string) string {
 	if id != "" {
 		idParts := strings.Split(id, "-")
@@ -118,4 +131,16 @@ func EnsureDirPath(path string, mod os.FileMode) error {
 		}
 	}
 	return nil
+}
+
+func ParseResourceId(resId, key string) string {
+	fragments := strings.Split(resId, "/")
+	val := ""
+	for i := 0; i < len(fragments); i++ {
+		if fragments[i] == key {
+			val = fragments[i + 1]
+			break
+		}
+	}
+	return val
 }

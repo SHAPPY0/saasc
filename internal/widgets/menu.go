@@ -52,65 +52,10 @@ var (
 		Icon:		"3",
 		Description: "Create New Job",
 	}
-	LogMenu = Item{
-		Name:		"log",
-		Icon:		"l",
-		Description: "Show Log",
-	}
-	StdoutMenu = Item{
-		Name:		"stdout",
-		Icon:		"o",
-		Description: "STDOUT Logs",
-	}
-	StderrMenu = Item{
-		Name:		"stderr",
-		Icon:		"e",
-		Description: "STDERR Logs",
-	}
-	VersionMenu = Item{
-		Name:		"versions",
-		Icon:		"v",
-		Description: "Show Job Versions",
-	}
-	RevertMenu = Item{
-		Name:		"revert_version",
-		Icon:		"ctrl+v",
-		Description: "Revert Version",
-	}
-	RestartTaskMenu = Item{
-		Name:		"restart_task",
-		Icon:		"ctrl+t",
-		Description: "Restart Task",
-	}
-	StopJobMenu = Item{
-		Name:		"stop_job",
-		Icon:		"ctrl+q",
-		Description: "Stop Job",
-	}
-	StartJobMenu = Item{
-		Name:		"start_job",
-		Icon:		"ctrl+s",
-		Description: "Start Job",
-	}
 	PlanMenu = Item{
 		Name:		"Plans",
 		Icon:		"1",
-		Description: "Nodes",
-	}
-	LogAutoScrollMenu = Item{
-		Name:		"log_autoscroll",
-		Icon:		"a",
-		Description: "Autoscroll",
-	}
-	DefinitionMenu = Item{
-		Name:		"job_definition",
-		Icon:		"d",
-		Description: "Definition",
-	}
-	RunJobMenu = Item{
-		Name:		"run_job",
-		Icon:		"ctrl+j",
-		Description: "Run Job",
+		Description: "Plans",
 	}
 )
 

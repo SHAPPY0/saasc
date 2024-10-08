@@ -3,6 +3,7 @@ package azure
 import (
 	"context"
 	"github.com/shappy0/saasc/internal/models"
+	// "github.com/shappy0/saasc/internal/utils"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice/v2"
 )
 
@@ -55,6 +56,7 @@ func mapWebAppValues(data *armappservice.Site) models.WebApp {
 		Location:					*data.Location,
 		Id:							*data.ID,
 		Kind:						*data.Kind,
+		Identity:					mapIdentity(data.Identity),
 		ClientAffinityEnabled:		*props.ClientAffinityEnabled,
 		ClientCertEnabled:			*props.ClientCertEnabled,
 		ContainerSize:				*props.ContainerSize,
@@ -84,7 +86,78 @@ func mapWebAppValues(data *armappservice.Site) models.WebApp {
 		RepositorySiteName:			*props.RepositorySiteName,
 		ResourceGroup:				*props.ResourceGroup,
 		State:						*props.State,
+		SiteConfig:					mapSiteConfig(props.SiteConfig),
 		UsageState:					string(*props.UsageState),
 	}
 	return wa
+}
+
+func mapIdentity(data *armappservice.ManagedServiceIdentity) models.ManagedIdentity {
+	mi := models.ManagedIdentity{
+		Type:					string(*data.Type),
+		PrincipalID:			data.PrincipalID,
+		TenantID:				data.TenantID,
+		UserAssignedIdentities:	make(map[string]*models.UserAssignedIdentity),
+	}
+	for k, v := range data.UserAssignedIdentities{
+		uai := models.UserAssignedIdentity{
+			ClientID:		v.ClientID,
+			PrincipalID:	v.PrincipalID,
+		}
+		mi.UserAssignedIdentities[k] = &uai
+	}
+	return mi
+}
+
+func mapSiteConfig(data *armappservice.SiteConfig) models.SiteConfig {
+	sc := models.SiteConfig{
+		AcrUseManagedIdentityCreds:	bool(*data.AcrUseManagedIdentityCreds),
+		AcrUserManagedIdentityID:		data.AcrUserManagedIdentityID,
+		AlwaysOn:						bool(*data.AlwaysOn),
+		AppCommandLine:					data.AppCommandLine,
+		AutoHealEnabled:				data.AutoHealEnabled,
+		AutoSwapSlotName:				data.AutoSwapSlotName,
+		DefaultDocuments:				data.DefaultDocuments,
+		DetailedErrorLoggingEnabled:	data.DetailedErrorLoggingEnabled,
+		DocumentRoot:					data.DocumentRoot,
+		ElasticWebAppScaleLimit:		data.ElasticWebAppScaleLimit,
+		FunctionAppScaleLimit:			data.FunctionAppScaleLimit,
+		FunctionsRuntimeScaleMonitoringEnabled:	data.FunctionsRuntimeScaleMonitoringEnabled,
+		HTTPLoggingEnabled:				data.HTTPLoggingEnabled,
+		HealthCheckPath:				data.HealthCheckPath,
+		Http20Enabled:					data.Http20Enabled,
+		JavaContainer:					data.JavaContainer,
+		JavaContainerVersion:			data.JavaContainerVersion,
+		JavaVersion:					data.JavaVersion,
+		KeyVaultReferenceIdentity:		data.KeyVaultReferenceIdentity,
+		LinuxFxVersion:					string(*data.LinuxFxVersion),
+		LocalMySQLEnabled:				data.LocalMySQLEnabled,
+		LogsDirectorySizeLimit:			data.LogsDirectorySizeLimit,
+		ManagedServiceIdentityID:		data.ManagedServiceIdentityID,
+		MinimumElasticInstanceCount:	*data.MinimumElasticInstanceCount,
+		NetFrameworkVersion:			data.NetFrameworkVersion,
+		NodeVersion:					data.NodeVersion,
+		NumberOfWorkers:				*data.NumberOfWorkers,
+		PhpVersion:						data.PhpVersion,
+		PowerShellVersion:				data.PowerShellVersion,
+		PreWarmedInstanceCount:			data.PreWarmedInstanceCount,
+		PublicNetworkAccess:			data.PublicNetworkAccess,
+		PublishingUsername:				data.PublishingUsername,
+		PythonVersion:					data.PythonVersion,
+		RemoteDebuggingEnabled:			data.RemoteDebuggingEnabled,
+		RemoteDebuggingVersion:			data.RemoteDebuggingVersion,
+		RequestTracingEnabled:			data.RequestTracingEnabled,
+		RequestTracingExpirationTime:	data.RequestTracingExpirationTime,
+		ScmIPSecurityRestrictionsUseMain:	data.ScmIPSecurityRestrictionsUseMain,
+		TracingOptions:					data.TracingOptions,
+		Use32BitWorkerProcess:			data.Use32BitWorkerProcess,
+		VnetName:						data.VnetName,
+		VnetPrivatePortsCount:			data.VnetPrivatePortsCount,
+		VnetRouteAllEnabled:			data.VnetRouteAllEnabled,
+		WebSocketsEnabled:				data.WebSocketsEnabled,
+		WebsiteTimeZone:				data.WebsiteTimeZone,
+		WindowsFxVersion:				data.WindowsFxVersion,
+		XManagedServiceIdentityID:		data.XManagedServiceIdentityID,
+	}
+	return sc
 }

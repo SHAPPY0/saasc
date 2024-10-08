@@ -17,7 +17,7 @@ func NewTextView(title string) *TextView {
 		TextView:	tview.NewTextView(),
 		Title:		title,
 	}
-	tv.SetBorder(true)
+	tv.SetBorderX(true)
 	tv.SetScrollable(true)
 	tv.SetTextVTitle("", "")
 	return tv
@@ -37,6 +37,10 @@ func (tv *TextView) SetTextAlignX(align string) {
 		alignX = tview.AlignRight
 	}
 	tv.SetTextAlign(alignX)
+}
+
+func (tv *TextView) SetBorderX(b bool) {
+	tv.SetBorder(b)
 }
 
 func (tv *TextView) SetTextVTitle(a, b string) {

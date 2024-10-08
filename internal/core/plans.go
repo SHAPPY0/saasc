@@ -19,6 +19,7 @@ func NewPlans(app *App) *Plans {
 	}
 	p.App.Layout.Body.AddPageX(p.GetTitle(), p, true, false)
 	p.SetOnSelectFn(p.OnRowSelect)
+	p.SetFocusFunc(p.OnFocus)
 	return p
 }
 
@@ -32,13 +33,21 @@ func (p *Plans) OnRowSelect(row, col int) {
 	}()
 }
 
+func (p *Plans) OnFocus() {
+	p.RenderView(p.App.Config.GetResourceGroup())
+}
+
 func (p *Plans) RenderView(rg string) {
-	p.ResourceGroup = rg
-	p.App.Alert.Loader(true)
-	data, err := p.App.Azure.PlansClient.List(p.ResourceGroup)
-	p.App.Alert.Loader(false)
-	if err != nil {
-		p.App.Alert.Error(err.Error())
+	if rg == "" {
+		p.App.Alert.Error("Please select resource group")
+	} else {
+		p.ResourceGroup = rg
+		p.App.Alert.Loader(true)
+		data, err := p.App.Azure.PlansClient.List(p.ResourceGroup)
+		p.App.Alert.Loader(false)
+		if err != nil {
+			p.App.Alert.Error(err.Error())
+		}
+		p.UpdateData(p.ResourceGroup, data)
 	}
-	p.UpdateData(p.ResourceGroup, data)
 }
