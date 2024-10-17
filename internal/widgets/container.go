@@ -20,7 +20,9 @@ func NewContainer(title string, rows, col int) *Container {
 		Col:		col,
 		Grids:		make([]*MapView, 0),
 	}
-	c.SetTitle(fmt.Sprintf(" %s ", title))
+	if title != "" {
+		c.SetTitle(fmt.Sprintf(" %s ", title))
+	}
 	for i := 0; i < col; i++ {
 		c.Grids = append(c.Grids, NewMapView())
 		c.AddItemX(c.Grids[i], 0, 1, false)

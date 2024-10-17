@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"os"
+	"errors"
 	"github.com/spf13/cobra"
 	"github.com/shappy0/saasc/internal/config"
 	"github.com/shappy0/saasc/internal/core"
@@ -31,16 +31,19 @@ func Init(cmd *cobra.Command, args []string) error {
 	}
 	conf.Version = Version
 	conf.Commit = Commit
-	logFile, err := os.OpenFile(conf.LogDirPath, os.O_CREATE|os.O_WRONLY|os.O_APPEND, utils.DefaultFileMod)
+	logger, err := utils.NewLogger(conf)
 	if err != nil {
 		return err
 	}
-	defer func() {
-		if logFile != nil {
-			_ = logFile.Close()
+	defer func() error {
+		if logger != nil && logger.File != nil {
+			_ = logger.File.Close()
 		}
+		if logger == nil {
+			return errors.New("Logger cann't initiated")
+		}
+		return nil
 	}()
-	var logger = utils.NewLogger(conf.LogLevel, logFile)
 	app, err := core.NewApp(conf, logger)
 	if err != nil {
 		return err

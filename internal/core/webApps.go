@@ -18,7 +18,17 @@ func NewWebApps(app *App) *WebApps {
 	}
 	wa.App.Layout.Body.AddPageX(wa.GetTitle(), wa, true, false)
 	wa.SetOnSelectFn(wa.OnRowSelect)
+	wa.SetFocusFunc(wa.OnFocus)
+	wa.SetBlurFunc(wa.OnBlur)
 	return &wa
+}
+
+func (wa *WebApps) OnFocus() {
+	wa.App.Layout.Header.Menu.AddGlobalMenus(wa.GlobalMenus, true)
+}
+
+func (wa *WebApps) OnBlur() {
+	wa.App.Layout.Header.Menu.RemoveGlobalMenus(wa.GlobalMenus)
 }
 
 func (wa *WebApps) OnRowSelect(row, col int) {

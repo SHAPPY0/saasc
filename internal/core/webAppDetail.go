@@ -3,7 +3,6 @@ package core
 import (
 	"github.com/shappy0/saasc/internal/views"
 	"github.com/shappy0/saasc/internal/models"
-	// "github.com/shappy0/saasc/internal/utils"
 )
 
 type WebAppDetail struct {

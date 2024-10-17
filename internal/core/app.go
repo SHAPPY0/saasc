@@ -20,6 +20,7 @@ type App struct {
 type PrimitivesX struct {
 	ResourceGroups	*ResourceGroups
 	Plans			*Plans
+	Plan			*Plan
 	WebApps			*WebApps
 	WebAppDetail	*WebAppDetail
 }
@@ -45,6 +46,7 @@ func (a *App) Init() error {
 	a.Primitives = PrimitivesX{
 		ResourceGroups:	NewResourceGroups(a),
 		Plans:			NewPlans(a),
+		Plan:			NewPlan(a),
 		WebApps:		NewWebApps(a),
 		WebAppDetail:	NewWebAppDetail(a),
 	}
@@ -67,7 +69,14 @@ func (a *App) BindAppKeys() {
 		case utils.RuneKey.Key:
 			switch event.Rune() {
 			case '1':
-				a.Layout.OpenPage(a.Primitives.Plans.GetTitle(), true)
+				if a.Layout.GetActivePage() != a.Primitives.ResourceGroups.GetTitle() {
+					a.Layout.OpenPage(a.Primitives.ResourceGroups.GetTitle(), true)
+				}
+				break
+			case '2':
+				if a.Layout.GetActivePage() != a.Primitives.Plans.GetTitle() {
+					a.Layout.OpenPage(a.Primitives.Plans.GetTitle(), true)
+				}
 				break
 			}
 			break

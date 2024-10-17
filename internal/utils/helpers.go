@@ -11,14 +11,6 @@ import (
 	"encoding/json"
 )
 
-const (
-	DefaultDirMod os.FileMode = 0755
-	DefaultFileMod os.FileMode = 0600
-	Info = "info"
-	Warning = "warning"
-	Error = "error"
-)
-
 func IntToStr(value int) string {
 	return strconv.Itoa(value)
 }
@@ -29,6 +21,14 @@ func StrToInt(s string) int {
 		return 0 
 	}
 	return v
+}
+
+func BootToStr(b bool) string {
+	val := "false"
+	if b {
+		val = "true"
+	}
+	return val
 }
 
 func IntToUint64(v int) uint64 {
@@ -137,7 +137,7 @@ func ParseResourceId(resId, key string) string {
 	fragments := strings.Split(resId, "/")
 	val := ""
 	for i := 0; i < len(fragments); i++ {
-		if fragments[i] == key {
+		if strings.ToLower(fragments[i]) == strings.ToLower(key) {
 			val = fragments[i + 1]
 			break
 		}

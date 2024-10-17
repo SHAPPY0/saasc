@@ -1,10 +1,10 @@
 package azure
 
 import (
-	// "fmt"
+	"fmt"
 	// "log"
 	"context"
-	// "github.com/shappy0/saasc/internal/config"
+	// "github.com/shappy0/saasc/internal/utils"
 	"github.com/shappy0/saasc/internal/models"
 	"github.com/Azure/azure-sdk-for-go/sdk/resourcemanager/appservice/armappservice/v2"
 )
@@ -16,7 +16,8 @@ type Plans struct {
 }
 
 type PlansClient interface {
-	List(string)	([]models.Plan, error)
+	List(string)		([]models.Plan, error)
+	Get(string, string) (*models.Plan, error)
 }
 
 func (c *Client) NewPlans() (*Plans, error) {
@@ -86,4 +87,34 @@ func mapPlanProperties(pp *armappservice.PlanProperties) *models.PlanProperties 
 		Subscription:				pp.Subscription,
 	}
 	return &planProperties
+}
+
+func (p *Plans) Get(rg, name string) (*models.Plan, error) {
+	var data *models.Plan
+	if rg == "" || name == "" {
+		msg := "[Plan:Get] rg and plan name required"
+		p.Azure.Logger.Error(msg)
+		return nil, fmt.Errorf(msg)
+	}
+	ctx := context.Background()
+	resp, err := p.Client.Get(ctx, rg, name, nil)
+	if err != nil {
+		return nil, err
+	}
+	data = &models.Plan{
+		Name:		*resp.Name,
+		Location:	*resp.Location,
+		Type:		*resp.Type,
+		Id:			*resp.ID,
+		Kind:		*resp.Kind,
+		Properties:	mapPlanProperties(resp.Properties),
+		SKU:		&models.SKUDescription{
+			Capacity:		*resp.SKU.Capacity,
+			Family:			*resp.SKU.Family,
+			Locations:		resp.SKU.Locations,
+			Name:			*resp.SKU.Size,
+			Tier:			*resp.SKU.Tier,
+		},
+	}
+	return data, nil
 }

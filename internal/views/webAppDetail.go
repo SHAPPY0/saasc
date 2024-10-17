@@ -32,7 +32,7 @@ func NewWebAppDetail() *WebAppDetail {
 		Networking:	widgets.NewContainer("Networking", 0, 2),
 	}
 	wad.FlexRow()
-	wad.SetTitle(TitleWebAppDetail)
+	wad.SetTitleX(TitleWebAppDetail, "")
 	wad.AddItemX(wad.FirstRow, 0, 1, false)
 	wad.AddItemX(wad.SecondRow, 0, 1, false)
 	return &wad
@@ -100,7 +100,7 @@ func (wad *WebAppDetail) DrawSecondRow() {
 }
 
 func (wad *WebAppDetail) SetNetworkingValues() {
-	wad.Networking.SetKeyValue("Vnet/Subnet:", fmt.Sprintf("%s/%s", utils.ParseResourceId(wad.Data.VirtualNetworkSubnetID, "virtaulNetworks"), utils.ParseResourceId(wad.Data.VirtualNetworkSubnetID, "subnets")))
+	wad.Networking.SetKeyValue("Vnet/Subnet:", fmt.Sprintf("%s/%s", utils.ParseResourceId(wad.Data.VirtualNetworkSubnetID, "virtualNetworks"), utils.ParseResourceId(wad.Data.VirtualNetworkSubnetID, "subnets")))
 	enabledHostNames := ""
 	for i := 0; i < len(wad.Data.EnabledHostNames); i++ {
 		enabledHostNames += (string(*wad.Data.EnabledHostNames[i]) + " ")
@@ -115,12 +115,12 @@ func (wad *WebAppDetail) SetNetworkingValues() {
 	if wad.Data.Identity.Type == "UserAssigned" {
 		umiName := ""
 		for k, _ := range wad.Data.Identity.UserAssignedIdentities {
-			umiName = utils.ParseResourceId(k, "userAssignedIdentites")
+			umiName = utils.ParseResourceId(k, "userAssignedIdentities")
 		}
-		wad.Networking.SetKeyValue("UserManagedIdentit:", umiName)
+		wad.Networking.SetKeyValue("UserManagedIdentity:", umiName)
 	}
 	wad.Networking.SetKeyValue("EnabledHostNames:", enabledHostNames)
-	wad.Networking.SetKeyValue("KeyVaultReferenceIdentity:", utils.ParseResourceId(wad.Data.KeyVaultReferenceIdentity, "userAssignedIdentites"))
+	wad.Networking.SetKeyValue("KeyVaultReferenceIdentity:", utils.ParseResourceId(wad.Data.KeyVaultReferenceIdentity, "userAssignedIdentities"))
 	wad.Networking.SetKeyValue("OutboundIPAddresses:", wad.Data.OutboundIPAddresses)
 	wad.Networking.SetKeyValue("PossibleOutboundIPAddresses:", wad.Data.PossibleOutboundIPAddresses)
 }

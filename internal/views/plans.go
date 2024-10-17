@@ -14,6 +14,11 @@ type Plans struct {
 	Title		string
 	Headers		[]string
 	Data		[]models.Plan
+	GlobalMenus	[]widgets.Item
+}
+
+var PlansGlobalMenu = []widgets.Item{
+	widgets.ResourceGroupsMenu,
 }
 
 func NewPlans() *Plans {
@@ -21,6 +26,7 @@ func NewPlans() *Plans {
 		Title:		TitlePlans,
 		Table:		widgets.NewTable(TitlePlans),
 		Headers:	[]string{"", "name", "os", "status", "apps", "location", "tier"},
+		GlobalMenus: PlansGlobalMenu,
 	}
 	p.Table.Headers = p.Headers
 	p.Table.DrawHeader()

@@ -20,6 +20,7 @@ func NewPlans(app *App) *Plans {
 	p.App.Layout.Body.AddPageX(p.GetTitle(), p, true, false)
 	p.SetOnSelectFn(p.OnRowSelect)
 	p.SetFocusFunc(p.OnFocus)
+	p.SetBlurFunc(p.OnBlur)
 	return p
 }
 
@@ -27,14 +28,19 @@ func (p *Plans) OnRowSelect(row, col int) {
 	p.SelectedRow = p.GetSelectedItem()
 	go func() {
 		p.App.Layout.QueueUpdateDraw(func() {
-			p.App.Primitives.WebApps.RenderView(p.ResourceGroup)
-			p.App.Layout.OpenPage(p.App.Primitives.WebApps.GetTitle(), true)
+			p.App.Primitives.Plan.RenderView(p.ResourceGroup, p.SelectedRow)
+			p.App.Layout.OpenPage(p.App.Primitives.Plan.GetTitle(), true)
 		})
 	}()
 }
 
 func (p *Plans) OnFocus() {
+	p.App.Layout.Header.Menu.AddGlobalMenus(p.GlobalMenus, true)
 	p.RenderView(p.App.Config.GetResourceGroup())
+}
+
+func (p *Plans) OnBlur() {
+	p.App.Layout.Header.Menu.RemoveGlobalMenus(p.GlobalMenus)
 }
 
 func (p *Plans) RenderView(rg string) {

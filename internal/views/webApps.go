@@ -11,9 +11,15 @@ var TitleWebApp = "web app"
 
 type WebApps struct {
 	*widgets.Table
-	Title 		string
-	Headers		[]string
-	Data		[]models.WebApp
+	Title 			string
+	Headers			[]string
+	Data			[]models.WebApp
+	GlobalMenus		[]widgets.Item
+}
+
+var WebAppsGlobalMenu = []widgets.Item{
+	widgets.ResourceGroupsMenu,
+	widgets.PlanMenu,
 }
 
 func NewWebApps() *WebApps {
@@ -21,6 +27,7 @@ func NewWebApps() *WebApps {
 		Title:		TitleWebApp,
 		Table:		widgets.NewTable(TitleWebApp),
 		Headers:	[]string{"name", "status", "kind", "usage state", "plan", "host", "public", "location"},
+		GlobalMenus:	WebAppsGlobalMenu,
 	}
 	wa.Table.Headers = wa.Headers
 	wa.Table.DrawHeader()

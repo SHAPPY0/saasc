@@ -52,9 +52,14 @@ var (
 		Icon:		"3",
 		Description: "Create New Job",
 	}
+	ResourceGroupsMenu = Item{
+		Name:		"Resource Groups",
+		Icon:		"1",
+		Description: "Resource Groups",
+	}
 	PlanMenu = Item{
 		Name:		"Plans",
-		Icon:		"1",
+		Icon:		"2",
 		Description: "Plans",
 	}
 )
@@ -66,11 +71,7 @@ var DefaultMenus = []Item{
 	EnterMenu,
 }
 
-var DefaultGlobalMenus = []Item{
-	PlanMenu,
-	ContextMenu,
-	CreateJobNMenu,
-}
+var DefaultGlobalMenus = []Item{}
 
 func NewMenu() *Menu {
 	m := &Menu{
@@ -133,6 +134,28 @@ func (m *Menu) Render() {
 	// if m.Grid3.Size > 0 {
 	// 	m.Grid3.DrawMapView()
 	// }
+}
+
+func (m *Menu) AddGlobalMenus(menus []Item, render bool) {
+	if len(menus) > 0 {
+		DefaultGlobalMenus = append(DefaultGlobalMenus, menus...)
+		if render {
+			m.RenderGlobalMenus()
+		}
+	}
+}
+
+func (m *Menu) RemoveGlobalMenus(menus []Item) {
+	if len(menus) > 0 {
+		for _, menu := range menus {
+			for i, gMenu := range DefaultGlobalMenus {
+				if gMenu.Name == menu.Name {
+					DefaultGlobalMenus = append(DefaultGlobalMenus[:i], DefaultGlobalMenus[i + 1:]...)
+				}
+			}
+		}
+		m.RenderGlobalMenus()
+	}
 }
 
 func (m *Menu) RenderGlobalMenus() {
